@@ -1,5 +1,5 @@
 {
-  "name": "j",
+  "name": "qj",
   "version": "0.0.1",
   "description": "A minimal jQuery replacement used in Card and Payment.",
   "keywords": [],
@@ -7,9 +7,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jessepollak/j.git"
+    "url": "https://github.com/jessepollak/qj.git"
   },
-  "main": "lib/j.js",
+  "main": "lib/qj.js",
   "scripts": {
     "test": "gulp test"
   },

@@ -18,16 +18,16 @@ development = process.env.NODE_ENV == 'development'
 
 gulp.task 'browserify', ->
   bundler = browserify
-    entries: ['./src/j.coffee']
+    entries: ['./src/qj.coffee']
     extensions: ['.coffee']
   bundler.transform(coffeeify)
 
   bundler
     .bundle(
       debug: development
-      standalone: 'j.js'
+      standalone: 'qj.js'
     ).on 'error', console.log
-    .pipe(source('j.js'))
+    .pipe(source('qj.js'))
     .pipe(gulp.dest('lib/'))
 
 
