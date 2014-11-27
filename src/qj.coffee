@@ -93,4 +93,4 @@ QJ.trigger = (el, name, data) ->
 
   el.dispatchEvent(ev)
 
-module.exports = J
+module.exports = QJ
