@@ -1,5 +1,9 @@
 QJ = (selector) ->
+  return selector if QJ.isDOMElement(selector)
   document.querySelectorAll selector
+
+QJ.isDOMElement = (el) ->
+  el and el.nodeName?
 
 rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g
 QJ.trim = (text) ->
@@ -30,16 +34,30 @@ QJ.normalizeEvent = (e) ->
     target: original.target or original.srcElement
     preventDefault: -> QJ.preventDefault(original)
     originalEvent: original
+    data: original.data or original.detail
 
   if not e.which?
     e.which = if original.charCode? then original.charCode else original.keyCode
   return e
 
 QJ.on = (element, eventName, callback) ->
+  if element.length
+    # handle multiple elements
+    for el in element
+      QJ.on el, eventName, callback
+      return
+
+  if eventName.match(" ")
+    # handle multiple event attachment
+    for multEventName in eventName.split(" ")
+      QJ.on element, multEventName, callback
+      return
+
   originalCallback = callback
   callback = (e) ->
     e = QJ.normalizeEvent(e)
     originalCallback(e)
+
   if element.addEventListener
     return element.addEventListener(eventName, callback, false)
 
@@ -58,6 +76,12 @@ QJ.addClass = (el, className) ->
   else
     el.className += ' ' + className
 QJ.hasClass = (el, className) ->
+  if el.length
+    hasClass = true
+    for e in el
+      hasClass = hasClass and QJ.hasClass(e, className)
+    return hasClass
+
   if (el.classList)
     el.classList.contains(className)
   else
@@ -79,11 +103,10 @@ QJ.toggleClass = (el, className, bool) ->
     QJ.removeClass el, className
 
 QJ.trigger = (el, name, data) ->
-  if (window.CustomEvent)
+  try
     ev = new CustomEvent(name, {detail: data})
-  else
+  catch e
     ev = document.createEvent('CustomEvent')
-
     # jsdom doesn't have initCustomEvent, so we need this check for
     # testing
     if ev.initCustomEvent
