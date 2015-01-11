@@ -109,7 +109,7 @@ QJ.append = (el, toAppend) ->
 
 QJ.find = (el, selector) ->
   # can only have one scope
-  el = el[0] if el.length
+  el = el[0] if el instanceof NodeList or el instanceof Array
   el.querySelectorAll(selector)
 
 QJ.trigger = (el, name, data) ->
