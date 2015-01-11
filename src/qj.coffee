@@ -102,6 +102,16 @@ QJ.toggleClass = (el, className, bool) ->
   else
     QJ.removeClass el, className
 
+QJ.append = (el, toAppend) ->
+  return (QJ.append(e, toAppend) for e in el) if el.length
+
+  el.insertAdjacentHTML('beforeend', toAppend)
+
+QJ.find = (el, selector) ->
+  # can only have one scope
+  el = el[0] if el.length
+  el.querySelectorAll(selector)
+
 QJ.trigger = (el, name, data) ->
   try
     ev = new CustomEvent(name, {detail: data})
