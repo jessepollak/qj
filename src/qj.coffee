@@ -45,13 +45,13 @@ QJ.on = (element, eventName, callback) ->
     # handle multiple elements
     for el in element
       QJ.on el, eventName, callback
-      return
+    return
 
   if eventName.match(" ")
     # handle multiple event attachment
     for multEventName in eventName.split(" ")
       QJ.on element, multEventName, callback
-      return
+    return
 
   originalCallback = callback
   callback = (e) ->
