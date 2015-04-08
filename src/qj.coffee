@@ -5,6 +5,25 @@ QJ = (selector) ->
 QJ.isDOMElement = (el) ->
   el and el.nodeName?
 
+QJ.isNodeList = (nodes) ->
+  result = Object::toString.call(nodes)
+  # modern browser such as IE9 / firefox / chrome etc.
+  if result == '[object HTMLCollection]' or result == '[object NodeList]'
+    return true
+  #ie 6/7/8
+  if typeof nodes != 'object'
+    return false
+  # detect length and item
+  if !('length' in nodes) or !('item' in nodes)
+    return false
+  # use the trick NodeList(index),all browsers support
+  try
+    if nodes(0) == null or nodes(0) and nodes(0).tagName
+      return true
+  catch e
+    return false
+  false
+
 rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g
 QJ.trim = (text) ->
   if text == null then "" else (text + "").replace rtrim, ""
@@ -41,7 +60,7 @@ QJ.normalizeEvent = (e) ->
   return e
 
 QJ.on = (element, eventName, callback) ->
-  if element.length
+  if @isNodeList element
     # handle multiple elements
     for el in element
       QJ.on el, eventName, callback
@@ -110,7 +129,11 @@ QJ.append = (el, toAppend) ->
 QJ.find = (el, selector) ->
   # can only have one scope
   el = el[0] if el instanceof NodeList or el instanceof Array
-  el.querySelectorAll(selector)
+
+  try
+    el.querySelectorAll(selector)
+  catch Exception
+    console.log 'Invalid Selector has been passed to querySelectorAll()'
 
 QJ.trigger = (el, name, data) ->
   try
