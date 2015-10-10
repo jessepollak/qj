@@ -2,8 +2,6 @@ gulp = require 'gulp'
 browserify = require 'browserify'
 coffeeify = require 'coffeeify'
 source = require 'vinyl-source-stream'
-scss = require 'gulp-sass'
-prefix = require 'gulp-autoprefixer'
 spawn = require('child_process').spawn
 server = require('tiny-lr')()
 livereload = require('gulp-livereload')
@@ -20,13 +18,11 @@ gulp.task 'browserify', ->
   bundler = browserify
     entries: ['./src/qj.coffee']
     extensions: ['.coffee']
-  bundler.transform(coffeeify)
+    debug: development
+    standalone: 'qj.js'
 
   bundler
-    .bundle(
-      debug: development
-      standalone: 'qj.js'
-    ).on 'error', console.log
+    .bundle().on 'error', console.log
     .pipe(source('qj.js'))
     .pipe(gulp.dest('lib/'))
 
