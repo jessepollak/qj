@@ -1,2 +1,4 @@
-*.sublime-project
+.tmp
+coverage
 node_modules
+lib

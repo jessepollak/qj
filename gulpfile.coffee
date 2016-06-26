@@ -14,38 +14,9 @@ runs = require 'run-sequence'
 
 development = process.env.NODE_ENV == 'development'
 
-gulp.task 'browserify', ->
-  bundler = browserify
-    entries: ['./src/qj.coffee']
-    extensions: ['.coffee']
-    debug: development
-    standalone: 'qj.js'
-
-  bundler
-    .bundle().on 'error', console.log
-    .pipe(source('qj.js'))
-    .pipe(gulp.dest('lib/'))
-
-
-gulp.task 'watch', ['browserify'],  ->
-  gulp.watch './src/**/*.coffee', ['browserify']
-
-gulp.task 'clean', ->
-  gulp.src 'lib'
-    .pipe rimraf()
-
 gulp.task 'test', ->
   gulp.src('./test')
     .pipe(mocha({ report: 'nyan', compilers: 'coffee:coffee-script/register' }))
     .pipe(gulp.dest('.'))
-
-gulp.task 'build', (cb) ->
-  process.env.NODE_ENV = 'production'
-  runs(
-    'test',
-    'clean',
-    'browserify',
-    cb
-  )
 
 gulp.task 'default', ['watch']
