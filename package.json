@@ -14,10 +14,8 @@
     "build": "webpack",
     "compile": "coffee -o lib/ --compile ./src/*.coffee",
     "development": "coffee -o lib/ --compile --watch ./src/*.coffee",
-    "preversion": "npm run test",
     "prepublish": "NODE_ENV=production npm run compile",
-    "postpublish": "git push origin master && git push --tags",
-    "test": "gulp test"
+    "postpublish": "git push origin master && git push --tags"
   },
   "devDependencies": {
     "browserify": "~11.2.0",
